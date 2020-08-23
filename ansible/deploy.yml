@@ -1,0 +1,19 @@
+---
+- name: Deploy example app
+  sudo: yes
+  hosts: all
+  vars:
+    #app
+    project_name: "my-app"
+    project_log_dir: "/var/logs/{{ project_name }}"
+    project_app_dir: "/var/apps/{{ project_name }}"
+
+    #ansistrano
+    ansistrano_deploy_from: "{{ playbook_dir }}/../my-app"
+    ansistrano_deploy_to: "/var/apps/{{ project_name }}"
+    ansistrano_before_update_code_tasks_file: "{{ playbook_dir }}/hooks/before.yml"
+    ansistrano_after_update_code_tasks_file: "{{ playbook_dir }}/hooks/after.yml"
+    ansistrano_keep_releases: 3
+    ansistrano_deploy_via: copy
+  roles:
+    - { role: ansistrano.deploy }

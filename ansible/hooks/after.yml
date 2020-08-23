@@ -1,0 +1,2 @@
+- name: chcon
+  command: chcon -R -t "httpd_sys_content_t" /var/apps/{{ project_name }}

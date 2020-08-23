@@ -1,0 +1,31 @@
+- name: create directory apps
+  file:
+    path: /var/apps/
+    state: directory
+- name: chcon
+  command: sudo chcon -R -t "httpd_sys_content_t" /var/apps/
+
+- name: create directory project name
+  file:
+    path: /var/apps/{{ project_name }}
+    state: directory
+- name: create directory logs
+  file:
+    path: /var/logs
+    state: directory
+- name: create directory logs project name
+  file:
+    path: /var/logs/{{ project_name }}
+    state: directory
+
+- name: Push default virtual host configuration
+  copy: src=host_cfg/{{ project_name }}.conf dest=/etc/httpd/sites-available/ mode=0640
+
+- name: Create symbolic link
+  file:
+    src: "/etc/httpd/sites-available/{{ project_name }}.conf"
+    dest: "/etc/httpd/sites-enabled/{{ project_name }}.conf"
+    state: link
+
+- name: restart apache
+  service: name=httpd state=restarted
