@@ -1,0 +1,9 @@
+---
+- name: Rollback example app to my-server.com
+  sudo: yes
+  hosts: all
+  vars:
+    project_name: "my-app"
+    ansistrano_deploy_to: "/var/apps/{{ project_name }}"
+  roles:
+    - { role: ansistrano.rollback }

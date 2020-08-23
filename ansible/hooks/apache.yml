@@ -1,0 +1,24 @@
+- hosts: all
+  sudo: yes
+  tasks:
+    - name: Installs apache web server
+      yum: pkg=httpd state=installed update_cache=true
+    - name: start apache
+      service: name=httpd state=started
+
+    - name: create directory sites-available
+      file:
+        path: /etc/httpd/sites-available
+        state: directory
+    - name: create directory sites-enabled
+      file:
+        path: /etc/httpd/sites-enabled
+        state: directory
+
+    - name: Insert/Update apache config
+      blockinfile:
+        path: /etc/httpd/conf/httpd.conf
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        insertafter: "IncludeOptional conf.d/*.conf"
+        block: |
+          IncludeOptional sites-enabled/*.conf
